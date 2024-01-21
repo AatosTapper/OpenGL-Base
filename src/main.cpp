@@ -12,14 +12,14 @@
 #define SW 1280
 #define SH 720
 
-float vertices[] = {
-     0.7f,  0.7f, // tr
-     0.7f, -0.7f, // br
-    -0.7f, -0.7f,  // bl
-    -0.7f,  0.7f// tl
+float vertices1[] = {
+     0.8f,  0.7f, // tr
+     0.8f, -0.7f, // br
+     0.4f, -0.7f,  // bl
+     0.4f,  0.7f// tl
 };
 
-unsigned int indices[] = {
+unsigned int indices1[] = {
     0, 1, 3,
     1, 2, 3
 };
@@ -28,23 +28,25 @@ int main(int argc, char** argv)
 {
     WindowManager window_manager(SW, SH, "OpenGL");
     Renderer renderer;
-    renderer.settings(argc, argv);
+    renderer.set_arguments(argc, argv);
 
     GLFWwindow *window = window_manager.get_window();
     
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
 
-    VertexBuffer VBO;
-    VBO.set_data(vertices, sizeof(vertices));
-
     VertexBufferLayout layout;
     layout.push<float>(2);
 
-    VertexArray VAO;
-    VAO.add_buffer(VBO, layout);
+    VertexBuffer VBO1;
+    VBO1.set_data(vertices1, sizeof(vertices1));
+
+    VertexArray VAO1;
+    VAO1.add_buffer(VBO1, layout);
 
     IndexBuffer EBO;
-    EBO.set_data(indices, 6);
+    EBO.set_data(indices1, 6);
+
+    RenderCall obj1 = { &VAO1, &EBO, &shader };
 
     while (!glfwWindowShouldClose(window))
     {
@@ -56,16 +58,21 @@ int main(int argc, char** argv)
         shader.use();
         shader.set_3f("rgb_color", red, green, blue);
 
+        // somewhere in application logic
+        renderer.push_to_queue(&obj1);
+
+        // rendering happens here
         renderer.start_frame();
-        renderer.draw(VAO, EBO, shader);
         renderer.end_frame(window);
+
         glfwPollEvents();
     }
 
     shader.free();
-    VBO.free();
+
     EBO.free();
-    VAO.free();
+    VBO1.free();
+    VAO1.free();
     
     window_manager.terminate_context();
 
