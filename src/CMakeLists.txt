@@ -21,4 +21,5 @@ target_link_libraries(main
     VertexBuffer
     VertexArray
     IndexBuffer
+    Texture
 )

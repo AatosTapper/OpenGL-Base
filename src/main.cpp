@@ -8,15 +8,16 @@
 #include "Rendering/Objects/VertexBuffer.h"
 #include "Rendering/Objects/VertexArray.h"
 #include "Rendering/Objects/IndexBuffer.h"
+#include "Rendering/Objects/Texture.h"
 
 #define SW 1280
 #define SH 720
 
 float vertices1[] = {
-     0.8f,  0.7f, // tr
-     0.8f, -0.7f, // br
-     0.4f, -0.7f,  // bl
-     0.4f,  0.7f// tl
+     0.5f,  0.5f, 1.0f, 1.0f,   // tr
+     0.5f, -0.5f, 1.0f, 0.0f,   // br
+    -0.5f, -0.5f, 0.0f, 0.0f,   // bl
+    -0.5f,  0.5f, 0.0f, 1.0f    // tl
 };
 
 unsigned int indices1[] = {
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
 
     VertexBufferLayout layout;
     layout.push<float>(2);
+    layout.push<float>(2);
 
     VertexBuffer VBO1;
     VBO1.set_data(vertices1, sizeof(vertices1));
@@ -46,23 +48,24 @@ int main(int argc, char** argv)
     IndexBuffer EBO;
     EBO.set_data(indices1, 6);
 
-    RenderCall obj1 = { &VAO1, &EBO, &shader };
+    Texture texture1("../res/Textures/SusRock.jpeg", true);
+    Texture texture2("../res/Textures/container.jpg");
+
 
     while (!glfwWindowShouldClose(window))
     {
-        float time_val = glfwGetTime();
-        float red = sin(time_val);
-        float green = sin(time_val + PI);
-        float blue = sin(2 * time_val + PI / 2);
+        glActiveTexture(GL_TEXTURE0);
+        texture1.bind();
+
+        glActiveTexture(GL_TEXTURE1);
+        texture2.bind();
 
         shader.use();
-        shader.set_3f("rgb_color", red, green, blue);
+        shader.set_int("texture_data1", 0);
+        shader.set_int("texture_data2", 1);
 
-        // somewhere in application logic
-        renderer.push_to_queue(&obj1);
-
-        // rendering happens here
         renderer.start_frame();
+        renderer.draw(VAO1, EBO, shader);
         renderer.end_frame(window);
 
         glfwPollEvents();
@@ -73,6 +76,8 @@ int main(int argc, char** argv)
     EBO.free();
     VBO1.free();
     VAO1.free();
+    texture1.free();
+    texture2.free();
     
     window_manager.terminate_context();
 
