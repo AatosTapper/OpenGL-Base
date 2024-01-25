@@ -11,7 +11,7 @@
 #include "Rendering/Objects/Texture.h"
 
 #define SW 1280
-#define SH 720
+#define SH 1280
 
 float vertices1[] = {
      0.5f,  0.5f, 1.0f, 1.0f,   // tr
@@ -49,11 +49,13 @@ int main(int argc, char** argv)
     EBO.set_data(indices1, 6);
 
     Texture texture1("../res/Textures/SusRock.jpeg", true);
-    Texture texture2("../res/Textures/container.jpg");
-
+    Texture texture2("../res/Textures/nerd_face_emoji.jpeg", true);
 
     while (!glfwWindowShouldClose(window))
     {
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 1.0f));
+
         glActiveTexture(GL_TEXTURE0);
         texture1.bind();
 
@@ -61,8 +63,10 @@ int main(int argc, char** argv)
         texture2.bind();
 
         shader.use();
+        shader.set_float("mix_amount", (cos((float)glfwGetTime() + PI) + 1.0f) * 0.5f);
         shader.set_int("texture_data1", 0);
         shader.set_int("texture_data2", 1);
+        shader.set_mat4f("transform", trans);
 
         renderer.start_frame();
         renderer.draw(VAO1, EBO, shader);

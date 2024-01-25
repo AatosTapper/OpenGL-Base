@@ -20,6 +20,7 @@ public:
     void set_2f(const std::string &name, float v1, float v2) const;
     void set_3f(const std::string &name, float v1, float v2, float v3) const;
     void set_4f(const std::string &name, float v1, float v2, float v3, float v4) const;
+    void set_mat4f(const std::string &name, const glm::mat4 &value) const;
 
 private:
     unsigned int m_id;
