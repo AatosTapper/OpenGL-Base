@@ -9,3 +9,4 @@ target_include_directories(WindowManager PRIVATE ../../dep)
 
 add_subdirectory(Shader)
 add_subdirectory(Objects)
+add_subdirectory(Parsing)

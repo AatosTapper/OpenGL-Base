@@ -11,6 +11,7 @@ public:
     ~WindowManager();
 
     inline GLFWwindow *get_window() const { return m_window; }
+    float get_aspect_ratio() const;
     void terminate_context();
 
 private:

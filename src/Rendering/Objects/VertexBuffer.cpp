@@ -2,6 +2,16 @@
 
 #include "../../config.h"
 
+#include <stdio.h>
+
+#define CHECK() \
+do { \
+    GLenum error = glGetError(); \
+    if (error != GL_NO_ERROR) { \
+        fprintf(stderr, "OpenGL Error (%s:%d): %d\n", __FILE__, __LINE__, error); \
+    } \
+} while (false)
+
 VertexBuffer::VertexBuffer() : m_freed(false)
 {
     

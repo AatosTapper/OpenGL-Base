@@ -2,13 +2,22 @@
 
 #include "../util.h"
 
+static float aspect_ratio = 0.0f;
+
+static float calc_aspect_ratio(int width, int height)
+{
+    return (float)width / (float)height;
+}
+
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+    aspect_ratio = calc_aspect_ratio(width, height);
 }
 
 WindowManager::WindowManager(int width, int height, const char* name) : m_terminated(false)
 {
+    aspect_ratio = calc_aspect_ratio(width, height);
     if (!glfwInit())
     {
         ASSERT(false, "GLFW couldn't init");
@@ -46,4 +55,9 @@ void WindowManager::terminate_context()
 {
     glfwTerminate();
     m_terminated = true;
+}
+
+float WindowManager::get_aspect_ratio() const
+{
+    return aspect_ratio;
 }

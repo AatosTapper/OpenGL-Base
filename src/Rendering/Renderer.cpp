@@ -3,6 +3,7 @@
 Renderer::Renderer()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_DEPTH_TEST);
 }
 
 Renderer::~Renderer()
@@ -18,7 +19,7 @@ void Renderer::push_to_queue(const RenderCall *obj)
 
 void Renderer::start_frame() 
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_draw_queue();
     m_render_queue.clear();
@@ -32,9 +33,13 @@ void Renderer::end_frame(GLFWwindow *window) const
 void Renderer::draw(const VertexArray &VAO, const IndexBuffer &EBO, const Shader &shader) const
 {
     VAO.bind();
+    GL_CHECK();
     EBO.bind();
+    GL_CHECK();
     shader.use();
+    GL_CHECK();
     glDrawElements(GL_TRIANGLES, EBO.get_elements(), GL_UNSIGNED_INT, 0);
+    GL_CHECK();
 }
 
 void Renderer::m_draw_queue() const

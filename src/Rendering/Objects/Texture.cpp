@@ -20,7 +20,7 @@ Texture::Texture(const std::string &file, bool flip) : m_freed(false)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int img_width, img_height, img_channels;
-    if (flip) stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(flip);
     unsigned char *image = stbi_load(file.c_str(), &img_width, &img_height, &img_channels, 0);
 
     if (image)
