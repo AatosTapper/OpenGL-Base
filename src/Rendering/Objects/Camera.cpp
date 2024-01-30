@@ -41,12 +41,12 @@ void Camera::back(const float amount)
 
 void Camera::left(const float amount)
 {
-    m_delta_pos -= m_right * amount;
+    m_delta_pos -= amount * m_right;
 }
 
 void Camera::right(const float amount)
 {
-    m_delta_pos += m_right * amount;
+    m_delta_pos += amount * m_right;
 }
 
 void Camera::up(const float amount)

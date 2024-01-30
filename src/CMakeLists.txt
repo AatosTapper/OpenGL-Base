@@ -10,6 +10,7 @@ target_compile_options(main PRIVATE
 )
 
 add_subdirectory(Rendering)
+add_subdirectory(Input)
 
 target_include_directories(main PRIVATE ../dep)
 target_link_libraries(main 
@@ -25,4 +26,5 @@ target_link_libraries(main
     ObjParser
     Mesh
     Camera
+    CameraController
 )

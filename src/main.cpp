@@ -11,74 +11,18 @@
 #include "Rendering/Objects/Texture.h"
 #include "Rendering/Objects/Mesh.h"
 #include "Rendering/Objects/Camera.h"
+#include "Input/CameraController.h"
 
 #define SW 1290
 #define SH 720
 
-float mouse_last_x = SW / 2;
-float mouse_last_y = SH / 2;
-float mouse_x_offset = 0.0f;
-float mouse_y_offset = 0.0f;
-bool mouse_status = false;
-bool esc_pressed_last_frame = false;
-
-void input(GLFWwindow *window, Camera &camera)
-{
-    const float cam_speed = 0.1f;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.forward(cam_speed);
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.back(cam_speed);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.left(cam_speed);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.right(cam_speed);
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        camera.up(cam_speed);
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        camera.down(cam_speed);
-
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !esc_pressed_last_frame)
-    {
-        if (mouse_status)
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        else
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        mouse_status = !mouse_status;
-        esc_pressed_last_frame = true;
-    }   
-    if (!mouse_status)
-    {
-        camera.yaw -= mouse_x_offset;
-        camera.pitch += mouse_y_offset;
-
-        if (camera.pitch > 88.0f)
-            camera.pitch = 88.0f;
-        else if (camera.pitch < -88.0f)
-            camera.pitch = -88.0f;
-
-        mouse_x_offset = 0.0f;
-        mouse_y_offset = 0.0f;
-    }
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
-        esc_pressed_last_frame = false;
-}
-
-void mouse_callback(GLFWwindow *window, double xpos, double ypos)
-{
-    mouse_x_offset = (mouse_last_x - xpos) * 0.14f;
-    mouse_y_offset = (mouse_last_y - ypos) * 0.1f;
-    mouse_last_x = xpos;
-    mouse_last_y = ypos;
-}
-
 int main(int argc, char** argv)
 {
     WindowManager window_manager(SW, SH, "OpenGL");
+    GLFWwindow *window = window_manager.get_window();
     Renderer renderer;
     renderer.set_arguments(argc, argv);
-
-    GLFWwindow *window = window_manager.get_window();
+    CameraController camera_controller(window, SW, SH);
     
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
     
@@ -105,7 +49,6 @@ int main(int argc, char** argv)
     uint32_t frames = 0;
     uint32_t updates = 0;
 
-    glfwSetCursorPosCallback(window, mouse_callback); 
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
@@ -117,9 +60,8 @@ int main(int argc, char** argv)
 
         while (tick_delta >= 1.0)
         {
+            camera_controller.update(window, camera);
             camera.update(window_manager.get_aspect_ratio());
-            
-            input(window, camera);
 
             updates++;
             tick_delta--;
