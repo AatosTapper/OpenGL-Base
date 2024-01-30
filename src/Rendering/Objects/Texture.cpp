@@ -30,7 +30,7 @@ Texture::Texture(const std::string &file, bool flip) : m_freed(false)
     }
     else
     {
-        ERR("Failed to load texture");
+        ERR("Failed to load texture " << file);
     }
 
     stbi_image_free(image);

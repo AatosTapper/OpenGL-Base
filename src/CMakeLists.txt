@@ -23,4 +23,6 @@ target_link_libraries(main
     IndexBuffer
     Texture
     ObjParser
+    Mesh
+    Camera
 )

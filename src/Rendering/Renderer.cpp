@@ -4,6 +4,8 @@ Renderer::Renderer()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
+
+    m_render_queue = std::make_unique<std::vector<QueueObject>>();
 }
 
 Renderer::~Renderer()
@@ -11,10 +13,10 @@ Renderer::~Renderer()
     
 }
 
-void Renderer::push_to_queue(const RenderCall *obj)
+void Renderer::push_to_queue(const Mesh &mesh, const Shader &shader)
 {
-    ASSERT(obj, "Can't push a null object");
-    m_render_queue.push_back(obj);
+    QueueObject obj = { &mesh, &shader };
+    m_render_queue->push_back(obj);
 }
 
 void Renderer::start_frame() 
@@ -22,7 +24,7 @@ void Renderer::start_frame()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_draw_queue();
-    m_render_queue.clear();
+    m_render_queue->clear();
 }
 
 void Renderer::end_frame(GLFWwindow *window) const
@@ -30,23 +32,24 @@ void Renderer::end_frame(GLFWwindow *window) const
     glfwSwapBuffers(window);
 }
 
-void Renderer::draw(const VertexArray &VAO, const IndexBuffer &EBO, const Shader &shader) const
+void Renderer::draw(const Mesh &mesh, const Shader &shader) const
 {
-    VAO.bind();
+    mesh.vao.bind();
     GL_CHECK();
-    EBO.bind();
+    mesh.ebo.bind();
     GL_CHECK();
     shader.use();
     GL_CHECK();
-    glDrawElements(GL_TRIANGLES, EBO.get_elements(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, mesh.ebo.get_elements(), GL_UNSIGNED_INT, 0);
     GL_CHECK();
 }
 
 void Renderer::m_draw_queue() const
 {
-    for (const auto obj : m_render_queue)
+    for (const auto &obj : *m_render_queue)
     {
-        draw(*obj->VAO, *obj->EBO, *obj->shader);
+        ASSERT(obj.mesh && obj.shader, "Object in the draw queue was null");
+        draw(*obj.mesh, *obj.shader);
     }
 }
 
@@ -64,7 +67,7 @@ void Renderer::set_arguments(int argc, char** argv)
 {
     for (uint32_t i = 0; i < argc; i++)
     {
-        if (strcmp(argv[i], "wire") == 0)
+        if (strcmp(argv[i], "w") == 0)
             wireframe_on();
     }
 }

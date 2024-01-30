@@ -43,6 +43,8 @@ WindowManager::WindowManager(int width, int height, const char* name) : m_termin
     int fb_width, fb_height;
     glfwGetFramebufferSize(m_window, &fb_width, &fb_height);
     framebuffer_size_callback(m_window, fb_width, fb_height);
+
+    glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 WindowManager::~WindowManager()

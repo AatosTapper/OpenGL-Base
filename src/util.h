@@ -41,7 +41,7 @@
         code; \
         auto end = std::chrono::high_resolution_clock::now(); \
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); \
-        INFO(message << " - Duration: " << duration << " microseconds"); \
+        INFO(message << " - Duration: " << duration / 1000.0f << " milliseconds"); \
     } while (0)
 
 #else
