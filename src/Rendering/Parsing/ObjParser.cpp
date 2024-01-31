@@ -10,8 +10,6 @@
 
 #define MAX_LINE_LEN 128
 
-// TODO: parse normals and texture coordinates
-
 void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, IndexBuffer *out_ebo, VertexBufferLayout *out_layout)
 {
     std::ifstream file(obj_file);
