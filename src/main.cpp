@@ -13,7 +13,7 @@
 #include "Rendering/Objects/Camera.h"
 #include "Input/CameraController.h"
 
-#define SW 1290
+#define SW 1280
 #define SH 720
 
 int main(int argc, char** argv)
@@ -27,8 +27,8 @@ int main(int argc, char** argv)
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
     
     Mesh monkeh("../res/Meshes/monkeh.obj");
-    Mesh monkeh2("../res/Meshes/monkeh.obj");
-    Mesh torus("../res/Meshes/toruses.obj");
+    Mesh monkeh2("../res/Meshes/round_cube.obj");
+    Mesh torus("../res/Meshes/monkeh.obj");
 
     Texture texture1("../res/Textures/container.jpg");
 

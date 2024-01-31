@@ -4,6 +4,7 @@ Renderer::Renderer()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
     m_render_queue = std::make_unique<std::vector<QueueObject>>();
 }
