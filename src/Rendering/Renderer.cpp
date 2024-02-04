@@ -5,7 +5,7 @@ Renderer::Renderer()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
+    //WARN("Backface culling disabled");
     m_render_queue = std::make_unique<std::vector<QueueObject>>();
 }
 
@@ -36,13 +36,14 @@ void Renderer::end_frame(GLFWwindow *window) const
 void Renderer::draw(const Mesh &mesh, const Shader &shader) const
 {
     mesh.vao.bind();
-    GL_CHECK();
-    mesh.ebo.bind();
-    GL_CHECK();
+    //GL_CHECK();
+    //mesh.ebo.bind();
+    //GL_CHECK();
     shader.use();
-    GL_CHECK();
-    glDrawElements(GL_TRIANGLES, mesh.ebo.get_elements(), GL_UNSIGNED_INT, 0);
-    GL_CHECK();
+    //GL_CHECK();
+    //glDrawElements(GL_TRIANGLES, mesh.ebo.get_elements(), GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertex_count());
+    //GL_CHECK();
 }
 
 void Renderer::m_draw_queue() const

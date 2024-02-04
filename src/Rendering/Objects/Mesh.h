@@ -3,12 +3,7 @@
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
-#include "IndexBuffer.h"
 #include "../Shader/Shader.h"
-
-// This is stupid object oriented but will stay for a while
-
-// TODO: replace with ordered component rendering, where mesh is just an index
 
 class Mesh
 {
@@ -17,10 +12,13 @@ public:
     ~Mesh();
 
     void free();
+    inline unsigned int get_vertex_count() const { return m_vetex_count; }
 
     VertexArray vao;
     VertexBuffer vbo;
     VertexBufferLayout layout;
-    IndexBuffer ebo;
-    glm::mat4 model;
+    glm::mat4 transform;
+
+private:
+    unsigned int m_vetex_count;
 };

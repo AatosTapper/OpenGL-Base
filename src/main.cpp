@@ -26,16 +26,18 @@ int main(int argc, char** argv)
     
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
     
-    Mesh monkeh("../res/Meshes/monkeh.obj");
-    Mesh monkeh2("../res/Meshes/round_cube.obj");
-    Mesh torus("../res/Meshes/monkeh.obj");
+    Mesh monkeh2("../res/Meshes/monkeh.obj");
+    Mesh rock("../res/Meshes/rock.obj");
+    Mesh torus("../res/Meshes/rock.obj");
 
     Texture texture1("../res/Textures/container.jpg");
 
-    monkeh.model = glm::translate(monkeh.model, glm::vec3(-6.0f, 4.0f, 0.0f));
-    monkeh2.model = glm::translate(monkeh2.model, glm::vec3(0.0f, -5.0f, -4.0f));
-    torus.model = glm::translate(torus.model, glm::vec3(-1.0f, 0.5f, -3.0f));
-    torus.model = glm::scale(torus.model, glm::vec3(0.5f));
+    rock.transform = glm::translate(rock.transform, glm::vec3(-1.0f, 2.0f, -10.0f));
+    rock.transform = glm::scale(rock.transform, glm::vec3(2.0f));
+    rock.transform = glm::rotate(rock.transform, glm::radians(90.0f), glm::vec3(1.0f, 0.5f, -0.5f));
+    monkeh2.transform = glm::translate(monkeh2.transform, glm::vec3(0.0f, -5.0f, -4.0f));
+    torus.transform = glm::translate(torus.transform, glm::vec3(-1.0f, 0.5f, -3.0f));
+    torus.transform = glm::scale(torus.transform, glm::vec3(0.5f));
 
     Camera camera(window_manager.get_aspect_ratio());
 
@@ -74,17 +76,18 @@ int main(int argc, char** argv)
             texture1.bind();
 
             shader.use();
+            texture1.bind();
             shader.set_int("texture_data1", 0);
             shader.set_mat4f("u_vp_mat", camera.get_vp_matrix());
 
             glClearColor(0.04f, 0.07f, 0.1f, 1.0f);
-            shader.set_mat4f("u_transform", monkeh.model);
-            renderer.draw(monkeh, shader);
+            shader.set_mat4f("u_transform", rock.transform);
+            renderer.draw(rock, shader);
 
-            shader.set_mat4f("u_transform", monkeh2.model);
+            shader.set_mat4f("u_transform", monkeh2.transform);
             renderer.draw(monkeh2, shader);
 
-            shader.set_mat4f("u_transform", torus.model);
+            shader.set_mat4f("u_transform", torus.transform);
             renderer.draw(torus, shader);
             renderer.end_frame(window);
 
@@ -100,7 +103,7 @@ int main(int argc, char** argv)
         }
     }
 
-    monkeh.free();
+    rock.free();
     torus.free();
     texture1.free();
     

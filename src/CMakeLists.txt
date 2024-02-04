@@ -11,6 +11,7 @@ target_compile_options(main PRIVATE
 
 add_subdirectory(Rendering)
 add_subdirectory(Input)
+add_subdirectory(Engine)
 
 target_include_directories(main PRIVATE ../dep)
 target_link_libraries(main 
@@ -27,4 +28,5 @@ target_link_libraries(main
     Mesh
     Camera
     CameraController
+    Scene
 )
