@@ -1,9 +1,14 @@
 #pragma once
 
-#include <stdint.h>
+enum ENT_TYPE : unsigned int
+{
+    NULL_ENT = 0u,
+    DEFAULT = 1u,
+    PLAYER   = 2u
+};
 
 struct Entity
 {
-    uint32_t id;
-    uint32_t mesh_id;
+    unsigned int id;
+    ENT_TYPE type;
 };

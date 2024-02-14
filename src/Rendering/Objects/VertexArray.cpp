@@ -10,6 +10,12 @@ VertexArray::VertexArray() : m_freed(false)
     glBindVertexArray(m_id);
 }
 
+VertexArray::VertexArray(const VertexArray &old)
+{
+    m_id = old.m_id;
+    m_freed = old.m_freed;
+}
+
 VertexArray::~VertexArray()
 {
     if (!m_freed)

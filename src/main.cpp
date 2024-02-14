@@ -12,102 +12,44 @@
 #include "Rendering/Objects/Mesh.h"
 #include "Rendering/Objects/Camera.h"
 #include "Input/CameraController.h"
+#include "Engine/Engine.h"
+#include "Engine/Scene.h"
 
-#define SW 1280
-#define SH 720
+#include <memory>
+
+#define SW 1920
+#define SH 1080
 
 int main(int argc, char** argv)
 {
-    WindowManager window_manager(SW, SH, "OpenGL");
-    GLFWwindow *window = window_manager.get_window();
-    Renderer renderer;
-    renderer.set_arguments(argc, argv);
-    CameraController camera_controller(window, SW, SH);
-    
+    Engine game(argc, argv);
+
+    Scene scene;
+    Entity ico_sphere = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+    Entity monkey = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+    Entity floor = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
     
-    Mesh monkeh2("../res/Meshes/monkeh.obj");
-    Mesh rock("../res/Meshes/rock.obj");
-    Mesh torus("../res/Meshes/rock.obj");
-
-    Texture texture1("../res/Textures/container.jpg");
-
-    rock.transform = glm::translate(rock.transform, glm::vec3(-1.0f, 2.0f, -10.0f));
-    rock.transform = glm::scale(rock.transform, glm::vec3(2.0f));
-    rock.transform = glm::rotate(rock.transform, glm::radians(90.0f), glm::vec3(1.0f, 0.5f, -0.5f));
-    monkeh2.transform = glm::translate(monkeh2.transform, glm::vec3(0.0f, -5.0f, -4.0f));
-    torus.transform = glm::translate(torus.transform, glm::vec3(-1.0f, 0.5f, -3.0f));
-    torus.transform = glm::scale(torus.transform, glm::vec3(0.5f));
-
-    Camera camera(window_manager.get_aspect_ratio());
-
-    constexpr double tick_speed = 1.0 / 60.0;
-    constexpr double fps_limit = 1.0 / 60.0;
-    double last_time = glfwGetTime();
-    double timer = last_time;
-    double tick_delta = 0;
-    double fps_delta = 0;
-    double now_time = 0;
-    uint32_t frames = 0;
-    uint32_t updates = 0;
-
-    while (!glfwWindowShouldClose(window))
-    {
-        glfwPollEvents();
-
-        now_time = glfwGetTime();
-        tick_delta += (now_time - last_time) / tick_speed;
-        fps_delta += (now_time - last_time) / fps_limit;
-        last_time = now_time;
-
-        while (tick_delta >= 1.0)
-        {
-            camera_controller.update(window, camera);
-            camera.update(window_manager.get_aspect_ratio());
-
-            updates++;
-            tick_delta--;
-        }
-        //while (fps_delta >= 1.0)
-        {
-            renderer.start_frame();
-
-            glActiveTexture(GL_TEXTURE0);
-            texture1.bind();
-
-            shader.use();
-            texture1.bind();
-            shader.set_int("texture_data1", 0);
-            shader.set_mat4f("u_vp_mat", camera.get_vp_matrix());
-
-            glClearColor(0.04f, 0.07f, 0.1f, 1.0f);
-            shader.set_mat4f("u_transform", rock.transform);
-            renderer.draw(rock, shader);
-
-            shader.set_mat4f("u_transform", monkeh2.transform);
-            renderer.draw(monkeh2, shader);
-
-            shader.set_mat4f("u_transform", torus.transform);
-            renderer.draw(torus, shader);
-            renderer.end_frame(window);
-
-            frames++;
-            //fps_delta--;
-        }
-        
-        if (glfwGetTime() - timer > 1.0) 
-        {
-            timer++;
-            std::cout << "FPS: " << frames << " Updates:" << updates << std::endl;
-            updates = 0, frames = 0;
-        }
-    }
-
-    rock.free();
-    torus.free();
-    texture1.free();
+    scene.ecm->add_component<Mesh>(ico_sphere, ECPointer<Mesh>(new Mesh("../res/Meshes/ico_sphere_smooth.obj")));
+    scene.ecm->add_component<Mesh>(monkey, ECPointer<Mesh>(new Mesh("../res/Meshes/monkeh.obj")));
+    scene.ecm->add_component<Mesh>(floor, ECPointer<Mesh>(new Mesh("../res/Meshes/inverse_cube.obj")));
     
-    window_manager.terminate_context();
+    Mesh *ico_sphere_model = scene.ecm->get_component<ECPointer<Mesh>>(ico_sphere)->ptr;
+    Mesh *monkey_model = scene.ecm->get_component<ECPointer<Mesh>>(monkey)->ptr;
+    Mesh *floor_model = scene.ecm->get_component<ECPointer<Mesh>>(floor)->ptr;
+
+    ico_sphere_model->transform = glm::translate(ico_sphere_model->transform, glm::vec3(-5.0f, 3.0f, -4.0f));
+
+    monkey_model->transform = glm::translate(monkey_model->transform, glm::vec3(0.0f, 0.0f, -5.0f));
+
+    floor_model->transform = glm::scale(floor_model->transform, glm::vec3(1.5f));
+    
+    game.load_scene(&scene);
+    
+    game.run(shader);
+
+    game.destroy();
 
     return 0;
 }

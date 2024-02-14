@@ -7,6 +7,7 @@ class VertexArray
 {
 public:
     VertexArray();
+    VertexArray(const VertexArray &old);
     ~VertexArray();
 
     void add_buffer(const VertexBuffer &vb, const VertexBufferLayout &layout);
@@ -14,6 +15,8 @@ public:
     void bind() const;
     void unbind() const;
     void free();
+
+    inline unsigned int get_id() const { return m_id; }
     
 private:
     unsigned int m_id;

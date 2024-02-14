@@ -2,22 +2,18 @@
 
 #include "../config.h"
 #include "../util.h"
+#include "ECManager.h"
+#include "../Rendering/Objects/Mesh.h"
 
 #include <vector>
 #include <memory>
 
-class Mesh;
-class Light {};
-class Shader;
-class Texture;
 
-struct Scene
+class Scene
 {
+public:
     Scene();
     ~Scene();
 
-    std::unique_ptr<std::vector<Mesh>> meshes;
-    std::unique_ptr<std::vector<Light>> lights;
-    std::unique_ptr<std::vector<Shader>> shaders;
-    std::unique_ptr<std::vector<Texture>> textures;
+    std::unique_ptr<ECManager> ecm;
 };

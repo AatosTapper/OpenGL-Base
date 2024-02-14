@@ -17,6 +17,12 @@ VertexBuffer::VertexBuffer() : m_freed(false)
     
 }
 
+VertexBuffer::VertexBuffer(const VertexBuffer &old)
+{
+    m_id = old.m_id;
+    m_freed = old.m_freed;
+}
+
 VertexBuffer::~VertexBuffer()
 {
     if (!m_freed)

@@ -13,10 +13,26 @@ Mesh::Mesh(const std::string &obj_file) : transform(glm::mat4(1.0f))
     });
 }
 
+Mesh::Mesh(const Mesh &old)
+{
+    LOG("Copied");
+    vao = old.vao;
+    vbo = old.vbo;
+    layout = old.layout;
+    transform = old.transform;
+    m_vetex_count = old.m_vetex_count;
+}
+
 Mesh::~Mesh()
 {
     vbo.free();
     vao.free();
+}
+
+void Mesh::unbind() const
+{
+    vao.unbind();
+    vbo.unbind();
 }
 
 void Mesh::free()

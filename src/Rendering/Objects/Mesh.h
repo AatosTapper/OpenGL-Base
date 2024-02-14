@@ -9,8 +9,10 @@ class Mesh
 {
 public:
     Mesh(const std::string &obj_file);
+    Mesh(const Mesh &old);
     ~Mesh();
 
+    void unbind() const;
     void free();
     inline unsigned int get_vertex_count() const { return m_vetex_count; }
 

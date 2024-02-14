@@ -28,5 +28,6 @@ target_link_libraries(main
     Mesh
     Camera
     CameraController
+    Engine
     Scene
 )
