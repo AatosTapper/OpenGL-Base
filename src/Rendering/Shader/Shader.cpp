@@ -34,6 +34,11 @@ void Shader::free()
     }
 }
 
+int Shader::get_location(const std::string &name) const
+{
+    return glGetUniformLocation(m_id, name.c_str());
+}
+
 void Shader::set_int(const std::string &name, int value) const
 {
     glUniform1i(glGetUniformLocation(m_id, name.c_str()), value);

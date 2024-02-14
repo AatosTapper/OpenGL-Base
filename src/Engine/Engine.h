@@ -15,12 +15,11 @@ class Mesh;
 class Engine
 {
 public:
-    Engine(int argc, char** argv);
+    Engine(int argc, char** argv, uint16_t sw, uint16_t sh);
     ~Engine();
 
     void load_scene(Scene *active_scene);
     void run(const Shader &shader);     // THIS SHOULDN'T TAKE IN SHADER
-    void destroy();
 
 private:
     std::unique_ptr<WindowManager> m_window_manager;

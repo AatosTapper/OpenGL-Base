@@ -6,24 +6,22 @@
 #include "../Rendering/Objects/Camera.h"
 #include "../Rendering/Objects/Mesh.h"
 #include "../Rendering/Shader/Shader.h"
+#include "../Rendering/Objects/Lights.h"
 #include "../Input/CameraController.h"
 #include "Scene.h"
 
-#define SW 1920
-#define SH 1080
-
-Engine::Engine(int argc, char** argv) : m_active_scene(nullptr)
+Engine::Engine(int argc, char** argv, uint16_t sw, uint16_t sh) : m_active_scene(nullptr)
 {
-    m_window_manager = std::make_unique<WindowManager>(SW, SH, "Engine");
+    m_window_manager = std::make_unique<WindowManager>(sw, sh, "Engine");
     m_renderer = std::make_unique<Renderer>();
     m_renderer->set_arguments(argc, argv);
     m_camera = std::make_unique<Camera>(m_window_manager->get_aspect_ratio());
-    m_camera_controller = std::make_unique<CameraController>(m_window_manager->get_window(), SW, SH);
+    m_camera_controller = std::make_unique<CameraController>(m_window_manager->get_window(), sw, sh);
 }
 
 Engine::~Engine()
 {
-    
+    m_window_manager->terminate_context();
 }
 
 void Engine::load_scene(Scene *active_scene)
@@ -93,12 +91,6 @@ void Engine::run(const Shader &shader)
     }
 }
 
-void Engine::destroy()
-{
-
-    m_window_manager->terminate_context();
-}
-
 void Engine::m_update_logic()
 {
     m_camera_controller->update(m_window_manager->get_window(), *m_camera);
@@ -109,13 +101,27 @@ void Engine::m_update_logic()
 
 void Engine::m_update_render(const Shader &shader)
 {
+    PointLight lights[3] = 
+        {{ glm::vec3(2.0f, 0.0f, -4.0f), glm::vec3(0.2f, 0.2f, 1.0f), 2.5f, 2.0f, 1 }, 
+        { glm::vec3(-2.0f, 0.0f, -4.0f), glm::vec3(1.0f, 0.2f, 0.2f), 2.5f, 2.0f, 1 },
+        { glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 2.5f, 2.0f, 0 }};
+
     m_renderer->start_frame();
 
     shader.use();
     shader.set_mat4f("u_vp_mat", m_camera->get_vp_matrix());
     shader.set_vec3f("u_view_pos", m_camera->get_position());
-    shader.set_vec3f("u_light_pos", glm::vec3(0.0f, 1.0f, 0.0f));
 
+    GLint uniform_location = shader.get_location("u_lights[0].pos");
+    for (uint32_t i = 0; i < 3; i++)
+    {
+        glUniform3fv(uniform_location + 5 * i,     1, glm::value_ptr(lights[i].pos));
+        glUniform3fv(uniform_location + 5 * i + 1, 1, glm::value_ptr(lights[i].col));
+        glUniform1f(uniform_location  + 5 * i + 2, lights[i].radius);
+        glUniform1f(uniform_location  + 5 * i + 3, lights[i].strength);
+        glUniform1i(uniform_location  + 5 * i + 4, lights[i].active);
+    }
+    
     std::vector<ECPointer<Mesh>> *ec_meshes = m_active_scene->ecm->get_all_components<ECPointer<Mesh>>();
     for (ECPointer<Mesh> &pointer : *ec_meshes)
     {   
