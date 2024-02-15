@@ -27,19 +27,21 @@ int main(int argc, char** argv)
     Scene scene;
     Entity ico_sphere = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
     Entity monkey = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
-    Entity floor = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+    Entity room = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+    Entity sus = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
     
-    scene.ecm->add_component<Mesh>(ico_sphere, ECPointer<Mesh>(new Mesh("../res/Meshes/ico_sphere_smooth.obj")));
+    scene.ecm->add_component<Mesh>(ico_sphere, ECPointer<Mesh>(new Mesh("../res/Meshes/monkeh.obj")));
     scene.ecm->add_component<Mesh>(monkey, ECPointer<Mesh>(new Mesh("../res/Meshes/monkeh.obj")));
-    scene.ecm->add_component<Mesh>(floor, ECPointer<Mesh>(new Mesh("../res/Meshes/inverse_cube.obj")));
+    scene.ecm->add_component<Mesh>(room, ECPointer<Mesh>(new Mesh("../res/Meshes/inverse_cube.obj")));
+    scene.ecm->add_component<Mesh>(sus, ECPointer<Mesh>(new Mesh("../res/Meshes/monkeh.obj")));
     
     Mesh *ico_sphere_model = scene.ecm->get_component<ECPointer<Mesh>>(ico_sphere)->ptr;
     Mesh *monkey_model = scene.ecm->get_component<ECPointer<Mesh>>(monkey)->ptr;
-    Mesh *floor_model = scene.ecm->get_component<ECPointer<Mesh>>(floor)->ptr;
+    Mesh *room_model = scene.ecm->get_component<ECPointer<Mesh>>(room)->ptr;
 
     ico_sphere_model->transform = glm::translate(ico_sphere_model->transform, glm::vec3(-5.0f, 3.0f, -4.0f));
     monkey_model->transform = glm::translate(monkey_model->transform, glm::vec3(0.0f, 0.0f, -5.0f));
-    floor_model->transform = glm::scale(floor_model->transform, glm::vec3(1.5f));
+    room_model->transform = glm::scale(room_model->transform, glm::vec3(1.5f));
 
     Shader shader("../res/Shaders/default.vert", "../res/Shaders/default.frag");
     

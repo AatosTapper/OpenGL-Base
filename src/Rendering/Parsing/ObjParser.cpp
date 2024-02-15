@@ -1,6 +1,6 @@
 #include "ObjParser.h"
 
-// ----------------------------- WARNING -----------------------------
+// -----------------------------  Bruh  -----------------------------
 // This file is kinda trash but it works well enough and somewhat fast
 
 #include "../Objects/VertexBuffer.h"
@@ -11,6 +11,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+#include <memory>
 
 #define MAX_LINE_LEN 128
 
@@ -28,7 +30,15 @@ struct Vec3f
     float data[3] = { 0.0f, 0.0f, 0.0f };
 };
 
-void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, VertexBufferLayout *out_layout, unsigned int *out_count)
+struct CacheObject
+{
+    std::unique_ptr<std::vector<Vec3f>> data;
+    unsigned int count;
+};
+
+static std::unordered_map<std::string, CacheObject> model_cache;
+
+static unsigned int read_obj_as_vec(const std::string &obj_file, std::vector<Vec3f> *vertex_buffer)
 {
     std::ifstream file(obj_file);
     ASSERT(file.is_open(), "Failed to load .obj file " << obj_file);
@@ -39,7 +49,7 @@ void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, VertexBufferL
     std::vector<FullIndex>     indices;
     unsigned int num_indices = 0u;
     
-    constexpr uint32_t RESERVE_AMOUNT = 1024; // 2^11 = 2048
+    constexpr uint32_t RESERVE_AMOUNT = 1024;
     vertex_positions.reserve(RESERVE_AMOUNT);
     texture_coordinates.reserve(RESERVE_AMOUNT);
     vertex_normals.reserve(RESERVE_AMOUNT);
@@ -139,16 +149,32 @@ void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, VertexBufferL
     if (texture_coordinates.size() < 1)
         texture_coordinates.push_back(NULL_VEC);
 
-    std::vector<Vec3f> vertex_buffer;
-    vertex_buffer.reserve(indices.size());
+    vertex_buffer->reserve(indices.size());
     for (uint32_t i = 0; i < indices.size(); i++)
     {
-        vertex_buffer.push_back(vertex_positions[indices[i].position]);
-        vertex_buffer.push_back(vertex_normals[indices[i].normal]);
-        vertex_buffer.push_back(texture_coordinates[indices[i].texture]);
+        vertex_buffer->push_back(vertex_positions[indices[i].position]);
+        vertex_buffer->push_back(vertex_normals[indices[i].normal]);
+        vertex_buffer->push_back(texture_coordinates[indices[i].texture]);
     }
 
-    *out_count = indices.size();
+    return indices.size();
+}
+
+void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, VertexBufferLayout *out_layout, unsigned int *out_count)
+{
+    std::vector<Vec3f> vertex_buffer;
+
+    if (model_cache.find(obj_file) == model_cache.end())
+    {
+        *out_count = read_obj_as_vec(obj_file, &vertex_buffer);
+        model_cache[obj_file] = { std::make_unique<std::vector<Vec3f>>(vertex_buffer), *out_count };
+    }
+    else
+    {
+        vertex_buffer = *model_cache[obj_file].data;
+        *out_count = model_cache[obj_file].count;
+    }
+    
     out_vbo->set_data((void*)&vertex_buffer[0], vertex_buffer.size() * sizeof(Vec3f));
     GL_CHECK();
     

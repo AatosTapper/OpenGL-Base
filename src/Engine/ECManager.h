@@ -11,10 +11,25 @@
 #include <typeindex>
 #include <memory>
 
-template <typename T> struct ECPointer 
+// This makes it possible to store pointers in the component manager
+template <typename T> 
+struct ECPointer 
 {
-    ECPointer(T *_data) : ptr(_data) {}
-    T *ptr; 
+    ECPointer(T *_ptr) : ptr(_ptr) 
+    {
+        ASSERT(_ptr, "ECPointer can't be initialized with a nullptr");
+    }
+    
+    T *ptr;
+
+    void destroy()
+    {
+        if (ptr != nullptr) 
+        {
+            delete ptr;
+            ptr = nullptr;
+        }
+    }
 };
 
 class BaseComponent 
