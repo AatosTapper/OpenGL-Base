@@ -2,6 +2,10 @@
 
 #include "../../config.h"
 
+#include <vector>
+
+class Shader;
+
 struct PointLight
 {
     glm::vec3 pos;
@@ -10,3 +14,5 @@ struct PointLight
     float strength;
     int active;
 };
+
+void send_lights_to_shader(const Shader &shader, const std::vector<PointLight> *lights);

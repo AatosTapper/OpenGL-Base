@@ -37,6 +37,5 @@ private:
     glm::vec3 m_delta_pos;
     std::unique_ptr<glm::mat4> m_vp_mat;
 
-    void m_clamp_delta_pos();
     void m_update_direction();
 };

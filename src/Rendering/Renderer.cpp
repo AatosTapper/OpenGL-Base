@@ -7,6 +7,8 @@ Renderer::Renderer()
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_CULL_FACE);
     //WARN("Backface culling disabled");
+    glEnable(GL_FRAMEBUFFER_SRGB);
+    WARN("Built in gamma correction enabled");
 }
 
 Renderer::~Renderer()

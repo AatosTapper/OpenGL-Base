@@ -9,6 +9,9 @@ class CameraController
 {
 public:
     CameraController(GLFWwindow *window, float SW, float SH);
-    
+
+    float movement_speed;
+    float mouse_sensitivity;
+
     void update(GLFWwindow *window, Camera &camera);
 };

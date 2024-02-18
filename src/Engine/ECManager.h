@@ -121,6 +121,7 @@ public:
     template <typename T>
     T *get_component(const Entity &entity, bool silence_warnings = false) 
     {
+        ASSERT(entity.id != ENT_TYPE::COMP_GROUP, "Can't access single components for an entity with type of component group");
         const size_t component_type_hash = typeid(T).hash_code();
         if (m_entity_indices.find(entity.id) == m_entity_indices.end() 
             || m_entity_indices[entity.id].find(component_type_hash) == m_entity_indices[entity.id].end()) 

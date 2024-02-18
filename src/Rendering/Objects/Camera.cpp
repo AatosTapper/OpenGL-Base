@@ -15,8 +15,6 @@ Camera::Camera(const float aspect_ratio) :
 
 void Camera::update(const float aspect_ratio)
 {
-    m_clamp_delta_pos(); // keep movement speed same in all directions
-
     m_position += m_delta_pos;
     m_delta_pos = glm::vec3(0.0f);
     m_update_direction();
@@ -57,19 +55,6 @@ void Camera::up(const float amount)
 void Camera::down(const float amount)
 {
     m_delta_pos -= amount * WORLD_UP;
-}
-
-void Camera::m_clamp_delta_pos()
-{
-    if (glm::length(m_delta_pos) < 0.00001f) return;
-    
-    const float max_len = 0.1f;
-    float multiplier = 1.0f;
-    
-    if (glm::length(m_delta_pos) > max_len)
-        multiplier = max_len / glm::length(m_delta_pos);
-
-    m_delta_pos *= multiplier;
 }
 
 void Camera::m_update_direction()

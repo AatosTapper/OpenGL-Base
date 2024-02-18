@@ -101,26 +101,14 @@ void Engine::m_update_logic()
 
 void Engine::m_update_render(const Shader &shader)
 {
-    PointLight lights[3] = 
-        {{ glm::vec3(2.0f, 0.0f, -4.0f), glm::vec3(0.2f, 0.2f, 1.0f), 2.5f, 2.0f, 1 }, 
-        { glm::vec3(-2.0f, 0.0f, -4.0f), glm::vec3(1.0f, 0.2f, 0.2f), 2.5f, 2.0f, 1 },
-        { glm::vec3(0.0f, 3.0f, -3.0f), glm::vec3(0.0f, 1.0f, 0.0f), 2.5f, 2.0f, 0 }};
-
     m_renderer->start_frame();
 
     shader.use();
     shader.set_mat4f("u_vp_mat", m_camera->get_vp_matrix());
     shader.set_vec3f("u_view_pos", m_camera->get_position());
 
-    GLint uniform_location = shader.get_location("u_lights[0].pos");
-    for (uint32_t i = 0; i < 3; i++)
-    {
-        glUniform3fv(uniform_location + 5 * i,     1, glm::value_ptr(lights[i].pos));
-        glUniform3fv(uniform_location + 5 * i + 1, 1, glm::value_ptr(lights[i].col));
-        glUniform1f(uniform_location  + 5 * i + 2, lights[i].radius);
-        glUniform1f(uniform_location  + 5 * i + 3, lights[i].strength);
-        glUniform1i(uniform_location  + 5 * i + 4, lights[i].active);
-    }
+    std::vector<PointLight> *lights = m_active_scene->ecm->get_all_components<PointLight>();
+    send_lights_to_shader(shader, lights);
     
     std::vector<ECPointer<Mesh>> *ec_meshes = m_active_scene->ecm->get_all_components<ECPointer<Mesh>>();
     for (ECPointer<Mesh> &pointer : *ec_meshes)

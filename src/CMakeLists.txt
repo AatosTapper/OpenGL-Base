@@ -30,4 +30,5 @@ target_link_libraries(main
     CameraController
     Engine
     Scene
+    Lights
 )
