@@ -103,6 +103,7 @@ public:
     template <typename T>
     int64_t get_component_index(const Entity &entity, bool silence_warnings = false)
     {
+        ASSERT(entity.id != ENT_TYPE::COMP_GROUP, "Can't access single components for an entity with type of component group");
         const size_t component_type_hash = typeid(T).hash_code();
         auto entity_iter = m_entity_indices.find(entity.id);
         if (entity_iter != m_entity_indices.end()) 
