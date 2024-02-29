@@ -1,5 +1,9 @@
 #include "Renderer.h"
 
+#include "Objects/VertexArray.h"
+#include "Objects/VertexBuffer.h"
+#include "Objects/IndexBuffer.h"
+
 Renderer::Renderer()
 {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

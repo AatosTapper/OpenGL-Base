@@ -1,14 +1,7 @@
 #pragma once
 
 #include "../config.h"
-#include "Objects/VertexArray.h"
-#include "Objects/VertexBuffer.h"
-#include "Objects/IndexBuffer.h"
-#include "Shader/Shader.h"
 #include "Objects/Mesh.h"
-
-#include <vector>
-#include <memory>
 
 class Renderer
 {

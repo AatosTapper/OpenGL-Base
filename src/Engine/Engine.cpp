@@ -10,6 +10,8 @@
 #include "../Input/CameraController.h"
 #include "Scene.h"
 
+#include "../Game/Scenes.h"
+
 Engine::Engine(int argc, char** argv, uint16_t sw, uint16_t sh) : m_active_scene(nullptr)
 {
     m_window_manager = std::make_unique<WindowManager>(sw, sh, "Engine");
@@ -82,6 +84,15 @@ void Engine::m_update_logic()
     m_camera->update(m_window_manager->get_aspect_ratio());
 
     // idk logic or stuff
+
+    if (glfwGetKey(m_window_manager->get_window(), GLFW_KEY_C) == GLFW_PRESS)
+    {
+        m_active_scene = Scene_2::scene;
+    }
+    if (glfwGetKey(m_window_manager->get_window(), GLFW_KEY_V) == GLFW_PRESS)
+    {
+        m_active_scene = Scene_1::scene;
+    }
 }
 
 void Engine::m_update_render()
@@ -92,7 +103,7 @@ void Engine::m_update_render()
     
     std::vector<ECPointer<Mesh>> *ec_meshes = m_active_scene->ecm->get_all_components<ECPointer<Mesh>>();
     for (ECPointer<Mesh> &pointer : *ec_meshes)
-    {   
+    {        
         Mesh *mesh = pointer.ptr;
 
         Shader *shader = mesh->material->get_shader();
