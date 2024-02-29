@@ -19,7 +19,7 @@ public:
     void start_frame();
     void end_frame(GLFWwindow *window) const;
 
-    void draw(const Mesh &mesh, const Shader &shader) const;
+    void draw(const Mesh &mesh) const;
     
     void wireframe_on() const;
     void wireframe_off() const;

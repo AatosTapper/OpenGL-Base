@@ -7,22 +7,23 @@
 
 #define PI 3.1415926535897932384626433832795028841
 
-#define LOG(a) std::cout << "Log: " << a << "\n";
+#define LOG(a) std::cout << "[Log] " << a << "\n"
+#define LOG_VARIABLE(a) std::cout << "[Log_Var] " << #a << " = " << a << "\n"
 
 #define ERR(message) \
-    std::cerr << "[Error]" << message \
+    std::cerr << "[Error] " << message \
     << "\n  File: " << __FILE__ \
     <<  "\n  Function: " << __FUNCTION__ \
     << "\n  Line: " << __LINE__ << "\n"
 
 #define WARN(message) \
-    std::cerr << "[Warning]" << message \
+    std::cerr << "[Warning] " << message \
     << "\n  File: " << __FILE__ \
     << "\n  Function: " << __FUNCTION__ \
     << "\n  Line: " << __LINE__ << "\n"
 
 #define INFO(message) \
-    std::cout << "[Info]" << message \
+    std::cout << "[Info] " << message \
     << "\n  File: " << __FILE__ \
     << "\n  Function: " << __FUNCTION__ \
     << "\n  Line: " << __LINE__ << "\n"
@@ -46,7 +47,8 @@
 
 #else
 
-#define LOG(a) 
+#define LOG(a)
+#define LOG_VARIABLE(a)
 #define ERR(message)
 #define WARN(message)
 #define INFO(message)

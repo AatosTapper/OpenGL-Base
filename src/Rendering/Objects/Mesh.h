@@ -4,11 +4,12 @@
 #include "VertexBufferLayout.h"
 #include "VertexArray.h"
 #include "../Shader/Shader.h"
+#include "Material.h"
 
 class Mesh
 {
 public:
-    Mesh(const std::string &obj_file);
+    Mesh(const std::string &obj_file, Material *_material);
     Mesh(const Mesh &old);
     ~Mesh();
 
@@ -20,6 +21,7 @@ public:
     VertexBuffer vbo;
     VertexBufferLayout layout;
     glm::mat4 transform;
+    Material *material;
 
 private:
     unsigned int m_vetex_count;

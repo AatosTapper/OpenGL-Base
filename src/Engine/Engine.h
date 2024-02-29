@@ -19,7 +19,7 @@ public:
     ~Engine();
 
     void load_scene(Scene *active_scene);
-    void run(const Shader &shader);     // THIS SHOULDN'T TAKE IN SHADER
+    void run();
 
 private:
     std::unique_ptr<WindowManager> m_window_manager;
@@ -29,5 +29,5 @@ private:
     Scene *m_active_scene;
 
     void m_update_logic();
-    void m_update_render(const Shader &shader);
+    void m_update_render();
 };

@@ -26,6 +26,7 @@ target_link_libraries(main
     Texture
     ObjParser
     Mesh
+    Material
     Camera
     CameraController
     Engine
