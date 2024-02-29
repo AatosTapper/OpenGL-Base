@@ -1,5 +1,5 @@
 # Base-Engine
-##### A simple OpenGL game engine written in C++
+#### A simple OpenGL game engine written in C++
 
 ## Features:
   - robust architecture with simple setup
