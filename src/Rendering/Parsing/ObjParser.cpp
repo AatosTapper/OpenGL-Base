@@ -168,11 +168,12 @@ void parse_obj(const std::string &obj_file, VertexBuffer *out_vbo, VertexBufferL
     {
         *out_count = read_obj_as_vec(obj_file, &vertex_buffer);
         model_cache[obj_file] = { std::make_unique<std::vector<Vec3f>>(vertex_buffer), *out_count };
+        LOG("Created object from \"" << obj_file <<"\"");
     }
     else
     {
-        vertex_buffer = *model_cache[obj_file].data;
         *out_count = model_cache[obj_file].count;
+        vertex_buffer = *model_cache[obj_file].data;
     }
     
     out_vbo->set_data((void*)&vertex_buffer[0], vertex_buffer.size() * sizeof(Vec3f));

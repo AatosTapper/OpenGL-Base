@@ -23,6 +23,7 @@ int main(int argc, char** argv)
     Entity ico_sphere = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
     Entity monkey = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
     Entity room = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
+    Entity monkey2 = scene.ecm->add_entity(ENT_TYPE::DEFAULT);
 
     MaterialDefault ico_sphere_mat(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f, 1.2f);
     MaterialDefault monkey_mat(glm::vec3(0.9f, 0.9f, 0.1f), 1.0f, 1.0f);
@@ -31,8 +32,9 @@ int main(int argc, char** argv)
     Mesh ico_sphere_model("../res/Meshes/ico_sphere_smooth.obj", &ico_sphere_mat);
     Mesh monkey_model("../res/Meshes/monkeh.obj", &monkey_mat);
     Mesh room_model("../res/Meshes/inverse_cube.obj", &room_mat);
+    Mesh monkey2_model("../res/Meshes/monkeh.obj", &room_mat);
 
-    ico_sphere_model.transform = glm::translate(ico_sphere_model.transform, glm::vec3(0.0f, 0.0f, 0.0f));
+    ico_sphere_model.transform = glm::translate(ico_sphere_model.transform, glm::vec3(-3.0f, 0.0f, 0.0f));
     ico_sphere_model.transform = glm::scale(ico_sphere_model.transform, glm::vec3(1.0f));
     monkey_model.transform = glm::translate(monkey_model.transform, glm::vec3(0.0f, 0.0f, -5.0f));
     room_model.transform = glm::scale(room_model.transform, glm::vec3(1.7f));
@@ -40,6 +42,7 @@ int main(int argc, char** argv)
     scene.ecm->add_component<Mesh>(ico_sphere, ECPointer<Mesh>(&ico_sphere_model));
     scene.ecm->add_component<Mesh>(monkey, ECPointer<Mesh>(&monkey_model));
     scene.ecm->add_component<Mesh>(room, ECPointer<Mesh>(&room_model));
+    scene.ecm->add_component<Mesh>(monkey2, ECPointer<Mesh>(&monkey2_model));
     
     Entity lights = scene.ecm->add_entity(ENT_TYPE::COMP_GROUP);
     scene.ecm->add_component<PointLight>(lights, PointLight{ 
