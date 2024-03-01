@@ -26,7 +26,7 @@ Engine::~Engine()
     m_window_manager->terminate_context();
 }
 
-void Engine::load_scene(Scene *active_scene)
+void Engine::set_scene(Scene *active_scene)
 {
     ASSERT(active_scene, "Can't load a null scene");
     m_active_scene = active_scene;
@@ -87,11 +87,11 @@ void Engine::m_update_logic()
 
     if (glfwGetKey(m_window_manager->get_window(), GLFW_KEY_C) == GLFW_PRESS)
     {
-        m_active_scene = Scene_2::scene;
+        set_scene(Scene_2::scene);
     }
     if (glfwGetKey(m_window_manager->get_window(), GLFW_KEY_V) == GLFW_PRESS)
     {
-        m_active_scene = Scene_1::scene;
+        set_scene(Scene_1::scene);
     }
 }
 

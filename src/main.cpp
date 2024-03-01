@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     Engine game(argc, argv, SW, SH);
     
     init_all_scenes();   
-    game.load_scene(Scene_1::scene);
+    game.set_scene(Scene_1::scene);
 
     game.run();
 

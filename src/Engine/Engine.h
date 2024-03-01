@@ -18,7 +18,7 @@ public:
     Engine(int argc, char** argv, uint16_t sw, uint16_t sh);
     ~Engine();
 
-    void load_scene(Scene *active_scene);
+    void set_scene(Scene *active_scene);
     void run();
 
 private:

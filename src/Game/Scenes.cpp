@@ -11,9 +11,9 @@ namespace Scene_1
         Entity monkey2    = scene->ecm->add_entity(ENT_TYPE::DEFAULT);
         Entity lights     = scene->ecm->add_entity(ENT_TYPE::COMP_GROUP);
 
-        ico_sphere_mat = new MaterialDefault(glm::vec3(1.0f, 0.0f, 0.0f), 0.3f, 1.2f);
-        monkey_mat     = new MaterialDefault(glm::vec3(0.9f, 0.9f, 0.1f), 1.0f, 1.0f);
-        room_mat       = new MaterialDefault(glm::vec3(0.0f, 0.4f, 1.0f), 0.9f, 1.0f);
+        ico_sphere_mat = new MaterialDefault(glm::vec3(1.0f, 1.0f, 1.0f), 0.95f, 0.05f);
+        monkey_mat     = new MaterialDefault(glm::vec3(0.9f, 0.1f, 0.9f), 0.95f, 0.05f);
+        room_mat       = new MaterialDefault(glm::vec3(0.0f, 0.4f, 1.0f), 0.95f, 0.05f);
 
         ico_sphere_model = new Mesh("../res/Meshes/ico_sphere_smooth.obj", ico_sphere_mat);
         monkey_model     = new Mesh("../res/Meshes/monkeh.obj", monkey_mat);
