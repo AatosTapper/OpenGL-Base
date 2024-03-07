@@ -9,7 +9,7 @@
 class Mesh
 {
 public:
-    Mesh(const std::string &obj_file, Material *_material);
+    Mesh(const std::string &obj_file, BaseMaterial *_material);
     Mesh(const Mesh &old);
     ~Mesh();
 
@@ -21,7 +21,7 @@ public:
     VertexBuffer vbo;
     VertexBufferLayout layout;
     glm::mat4 transform;
-    Material *material;
+    BaseMaterial *material;
 
 private:
     unsigned int m_vetex_count;

@@ -99,19 +99,23 @@ void Engine::m_update_render()
 {
     m_renderer->start_frame();
     
-    std::vector<PointLight> *lights = m_active_scene->ecm->get_all_components<PointLight>();
+    std::vector<PointLight> *point_lights = m_active_scene->ecm->get_all_components<PointLight>();
+    std::vector<SunLight> *sun_lights = m_active_scene->ecm->get_all_components<SunLight>();
     
     std::vector<ECPointer<Mesh>> *ec_meshes = m_active_scene->ecm->get_all_components<ECPointer<Mesh>>();
     for (ECPointer<Mesh> &pointer : *ec_meshes)
     {        
         Mesh *mesh = pointer.ptr;
 
-        Shader *shader = mesh->material->get_shader();
+        Shader *shader = mesh->material->prepare_shader();
         shader->set_mat4f("u_vp_mat", m_camera->get_vp_matrix());
         shader->set_vec3f("u_view_pos", m_camera->get_position());
-        send_lights_to_shader(shader, lights);
         shader->set_mat4f("u_transform", mesh->transform);
         shader->set_mat4f("u_inverse_model", glm::transpose(glm::inverse(mesh->transform)));
+
+        send_lights_to_shader(shader, point_lights);
+        send_lights_to_shader(shader, sun_lights);
+
         m_renderer->draw(*mesh);
     }
 

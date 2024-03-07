@@ -1,23 +1,26 @@
 #include "Material.h"
 
 #include "../Shader/Shader.h"
+#include "../Objects/Texture.h"
 #include "../../util.h"
 
 #include <unordered_map>
 #include <memory>
 
-class ShaderCache
+template <typename T>
+class Cache
 {
 public:
-    ~ShaderCache()
+    ~Cache()
     {
         for (auto &it : data) delete it.second;
     }
 
-    std::unordered_map<std::string, Shader*> data;
+    std::unordered_map<std::string, T*> data;
 };
 
-static std::unique_ptr<ShaderCache> shader_cache = std::make_unique<ShaderCache>();
+static std::unique_ptr<Cache<Shader>> shader_cache = std::make_unique<Cache<Shader>>();
+static std::unique_ptr<Cache<Texture>> texture_cache = std::make_unique<Cache<Texture>>();
 
 static Shader *get_shader_from_cache(const ShaderInfo &shader_info)
 {
@@ -27,6 +30,36 @@ static Shader *get_shader_from_cache(const ShaderInfo &shader_info)
         shader_cache->data[shader_info.name] = new Shader(shader_info.vert_path, shader_info.frag_path);
     }
     return shader_cache->data.at(shader_info.name);
+}
+
+static Texture *get_texture_from_cache(const TextureInfo &texture_info)
+{
+    if (texture_cache->data.find(texture_info.path) == texture_cache->data.end()) 
+    {
+        LOG("Created shader \"" << texture_info.path << "\"");
+        texture_cache->data[texture_info.path] = new Texture(texture_info.path);
+    }
+    return texture_cache->data.at(texture_info.path);
+}
+
+BaseMaterial::BaseMaterial()
+    : m_albedo({ .path = "../res/Textures/no_texture.png" })
+{
+
+}
+
+void BaseMaterial::set_albedo(const std::string &path)
+{
+    m_albedo = {
+        .path = path
+    };
+}
+
+void BaseMaterial::m_prepare_textures() const
+{
+    Texture *albedo = get_texture_from_cache(m_albedo);
+    glActiveTexture(GL_TEXTURE0);
+    albedo->bind();
 }
 
 MaterialDefault::MaterialDefault(glm::vec3 _color, float _diffuse, float _speular)
@@ -39,10 +72,12 @@ MaterialDefault::MaterialDefault(glm::vec3 _color, float _diffuse, float _speula
     };
 }
 
-Shader *MaterialDefault::get_shader() const
+Shader *MaterialDefault::prepare_shader() const
 {
-    Shader *shader = get_shader_from_cache(m_shader);
+    m_prepare_textures();
 
+    Shader *shader = get_shader_from_cache(m_shader);
+    
     shader->use();
     shader->set_vec3f("material_color", color);
     shader->set_float("material_diffuse", diffuse);

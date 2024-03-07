@@ -2,8 +2,8 @@
 
 #include "../Parsing/ObjParser.h"
 
-Mesh::Mesh(const std::string &obj_file, Material *_material)
-    : transform(glm::mat4(1.0f)), material(static_cast<Material*>(_material))
+Mesh::Mesh(const std::string &obj_file, BaseMaterial *_material)
+    : transform(glm::mat4(1.0f)), material(static_cast<BaseMaterial*>(_material))
 {
     //TRACK_PERFORMANCE("Mesh creation for " << obj_file, {
 

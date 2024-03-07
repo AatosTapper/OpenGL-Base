@@ -12,13 +12,10 @@
 namespace Scene_1
 {
     inline Scene *scene;
-    static MaterialDefault *ico_sphere_mat;
-    static MaterialDefault *monkey_mat;
-    static MaterialDefault *room_mat;
-    static Mesh *ico_sphere_model;
-    static Mesh *monkey_model;
-    static Mesh *room_model;
-    static Mesh *monkey2_model;
+    static MaterialDefault *building_mat;
+    static MaterialDefault *landscape_mat;
+    static Mesh *building_model;
+    static Mesh *landscape_model;
 }
 
 namespace Scene_2

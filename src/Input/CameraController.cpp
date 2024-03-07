@@ -79,18 +79,3 @@ void CameraController::update(GLFWwindow *window, Camera &camera)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE)
         esc_pressed_last_frame = false;
 }
-
-/*
-void CameraController::m_clamp_delta_pos()
-{
-    if (glm::length(m_delta_pos) < 0.00001f) return;
-    
-    const float max_len = 0.1f;
-    float multiplier = 1.0f;
-    
-    if (glm::length(m_delta_pos) > max_len)
-        multiplier = max_len / glm::length(m_delta_pos);
-
-    m_delta_pos *= multiplier;
-}
-*/
