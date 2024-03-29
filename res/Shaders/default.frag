@@ -27,6 +27,7 @@ uniform PointLight u_point_lights[8];
 uniform SunLight u_sun_lights[8];
 
 uniform sampler2D u_albedo_1;
+uniform sampler2D u_ao_1;
 uniform sampler2D texture_data2;
 
 uniform vec3 material_color;
@@ -107,6 +108,8 @@ void main()
         full_lighting += sun_light_contribution(u_sun_lights[i], view_dir);
     }
     
+    vec3 ambient_occlusion = texture(u_ao_1, tex_coord.xy).xyz;
+    float occlusion_factor = ambient_occlusion.x * 0.3 + ambient_occlusion.y * 0.59 + ambient_occlusion.z * 0.11;
     vec3 flat_color = material_color * texture(u_albedo_1, tex_coord.xy).xyz;
     vec3 lit_color = (full_lighting + ambient) * flat_color;
     frag_color = vec4(mix(vec3(0.5, 0.5, 0.5), lit_color * brightness, contrast), 1.0);

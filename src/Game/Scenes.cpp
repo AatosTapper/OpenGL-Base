@@ -6,14 +6,15 @@ namespace Scene_1
     {
         scene = new Scene();
         Entity building = scene->ecm->add_entity(ENT_TYPE::DEFAULT);
-        Entity world    = scene->ecm->add_entity(ENT_TYPE::COMP_GROUP);
-        Entity lights   = scene->ecm->add_entity(ENT_TYPE::COMP_GROUP);
+        Entity world = scene->ecm->add_entity(ENT_TYPE::COMP_GROUP);
+        Entity lights = scene->ecm->add_entity(ENT_TYPE::COMP_GROUP);
 
-        building_mat    = new MaterialDefault(glm::vec3(0.7f, 0.6f, 0.5f), 0.9f, 0.6f);
-        landscape_mat   = new MaterialDefault(glm::vec3(0.4f, 0.4f, 0.4f), 0.9f, 0.1f);
-        landscape_mat->set_albedo("../res/Textures/nerd_face_emoji.jpeg");
+        building_mat = new MaterialDefault(glm::vec3(0.7f, 0.6f, 0.5f), 0.9f, 0.6f);
+        landscape_mat = new MaterialDefault(glm::vec3(0.4f, 0.4f, 0.4f), 0.9f, 0.1f);
+        landscape_mat->set_albedo("../res/Textures/container.jpg");
+        //building_mat->set_ao("../res/Materials/brick_wall_1/ao.png");
 
-        building_model  = new Mesh("../res/Meshes/Buildings.obj", building_mat);
+        building_model = new Mesh("../res/Meshes/Buildings.obj", building_mat);
         landscape_model = new Mesh("../res/Meshes/Landscape1.obj", landscape_mat);
 
         scene->ecm->add_component<Mesh>(building, ECPointer<Mesh>(building_model));

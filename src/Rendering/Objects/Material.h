@@ -25,12 +25,14 @@ public:
 
     virtual Shader *prepare_shader() const = 0;
     void set_albedo(const std::string &path);
+    void set_ao(const std::string &path);
 
 protected:
     ShaderInfo m_shader;
     TextureInfo m_albedo;
+    TextureInfo m_ao;
 
-    void m_prepare_textures() const;
+    void m_prepare_textures(const Shader *shader) const;
 };
 
 class MaterialDefault : public BaseMaterial

@@ -43,7 +43,8 @@ static Texture *get_texture_from_cache(const TextureInfo &texture_info)
 }
 
 BaseMaterial::BaseMaterial()
-    : m_albedo({ .path = "../res/Textures/no_texture.png" })
+    : m_albedo({ .path = "../res/Textures/no_texture.png" }),
+      m_ao({ .path = "../res/Textures/no_texture.png" })
 {
 
 }
@@ -55,11 +56,30 @@ void BaseMaterial::set_albedo(const std::string &path)
     };
 }
 
-void BaseMaterial::m_prepare_textures() const
+void BaseMaterial::set_ao(const std::string &path)
 {
+    m_ao = {
+        .path = path
+    };
+}
+
+void BaseMaterial::m_prepare_textures(const Shader *shader) const
+{
+    shader->use();
+
     Texture *albedo = get_texture_from_cache(m_albedo);
     glActiveTexture(GL_TEXTURE0);
     albedo->bind();
+    shader->set_int("u_albedo_1", 0);
+
+    // TODO: normal here
+
+    /*
+    Texture *ao = get_texture_from_cache(m_ao);
+    glActiveTexture(GL_TEXTURE1);
+    ao->bind();
+    shader->set_int("u_ao_1", 1);
+    */
 }
 
 MaterialDefault::MaterialDefault(glm::vec3 _color, float _diffuse, float _speular)
@@ -74,11 +94,9 @@ MaterialDefault::MaterialDefault(glm::vec3 _color, float _diffuse, float _speula
 
 Shader *MaterialDefault::prepare_shader() const
 {
-    m_prepare_textures();
-
     Shader *shader = get_shader_from_cache(m_shader);
+    m_prepare_textures(shader);
     
-    shader->use();
     shader->set_vec3f("material_color", color);
     shader->set_float("material_diffuse", diffuse);
     shader->set_float("material_specular", specular);
